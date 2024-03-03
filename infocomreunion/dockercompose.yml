@@ -1,0 +1,46 @@
+version: "3.7"
+services:
+  infocomreunion:
+    build: .
+    container_name: "infocomreunion"
+    image: infocomreunion:latest
+    restart: unless-stopped
+    tty: true
+    hostname: infocomreunion
+    environment:
+      TZ: "Indian/Reunion"
+    ports:
+      - 10670:80
+    privileged: true
+    links:
+      - bddinfocomreunion
+    networks:
+      - default
+    volumes:
+            - type: bind
+              source: C:/Users/sebastien.girier/Projets/infocomreunion/files
+              target: /home/infocomreunion/web/uploads/media
+            - type: bind
+              source: C:/Users/sebastien.girier/Projets/infocomreunion/default
+              target: /var/www/html/web/sites/default/
+  bddinfocomreunion:
+    image: ghcr.io/sebastiengdf/mysql:latest
+    container_name: "bddinfocomreunion"
+    restart: unless-stopped
+    tty: true
+    hostname: bddinfocomreunion
+    environment:
+      TZ: "Indian/Reunion"
+      MYSQL_ROOT_PASSWORD: Boss132
+      MYSQL_DATABASE: 'infocomreunion'
+      MYSQL_TCP_PORT: 3307
+    privileged: true
+    networks:
+      - default
+    volumes:
+            - type: bind
+              source: C:/Users/sebastien.girier/Projets/infocomreunion/data
+              target: /var/lib/mysql
+            - type: bind
+              source: C:/Users/sebastien.girier/Projets/infocomreunion/sql
+              target: /sql
